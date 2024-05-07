@@ -3,7 +3,7 @@ from fastapi.responses import RedirectResponse
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import pickle
-ccimport uvicorn
+import uvicorn
 
 app = FastAPI(title="Sentiment Analysis API")
 # model = load_model("LSTM78percentFinal.h5")
