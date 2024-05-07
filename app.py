@@ -13,7 +13,7 @@ model = load_model("LSTM78percentFinal.h5")
 # Load your tokenizer
 with open("tokenizer.json", "r") as f:
     tokenizer_data = json.load(f)
-    tokenizer = json.loads(tokenizer_data)
+    tokenizer = json.load(tokenizer_data)
 
 
 @app.get("/", include_in_schema=False)
