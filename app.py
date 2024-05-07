@@ -2,8 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-
-import json
+import joblib
 from textblob import TextBlob
 import uvicorn
 
@@ -11,9 +10,8 @@ app = FastAPI(title="Sentiment Analysis API")
 model = load_model("LSTM78percentFinal.h5")
 
 # Load your tokenizer
-with open("tokenizer.json", "r") as f:
-    tokenizer_data = json.load(f)
-    tokenizer = json.load(tokenizer_data)
+tokenizer = joblib.load("tokenizerLSTM.pkl")
+
 
 
 @app.get("/", include_in_schema=False)
@@ -22,16 +20,16 @@ def index():
 
 @app.get("/sentiment-analysis/{text}")
 def sentiment_analysis(text: str):
-    blob = TextBlob(text)
-    polarity = blob.sentiment.polarity
-    subjectivity = blob.sentiment.subjectivity
+    # blob = TextBlob(text)
+    # polarity = blob.sentiment.polarity
+    # subjectivity = blob.sentiment.subjectivity
 
-    if polarity > 0:
-        sentiment = "positive"
-    elif polarity < 0:
-        sentiment = "negative"
-    else:
-        sentiment = "neutral"
+    # if polarity > 0:
+    #     sentiment = "positive"
+    # elif polarity < 0:
+    #     sentiment = "negative"
+    # else:
+    #     sentiment = "neutral"
         
     tokenized_text = tokenizer.texts_to_sequences([text])
     max_sequence_length = 250
@@ -44,8 +42,8 @@ def sentiment_analysis(text: str):
 
     return {
         "text": text,
-        "sentiment": sentiment,
-        "polarity": polarity,
-        "subjectivity": subjectivity,
+        # "sentiment": sentiment,
+        # "polarity": polarity,
+        # "subjectivity": subjectivity,
         "prediction" : prediction,
     }
