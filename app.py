@@ -2,15 +2,19 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-import joblib
+import pickle
 from textblob import TextBlob
 import uvicorn
 
 app = FastAPI(title="Sentiment Analysis API")
-model = load_model("LSTM78percentFinal.h5")
+# model = load_model("LSTM78percentFinal.h5")
 
 # Load your tokenizer
-tokenizer = joblib.load("tokenizerLSTM.pkl")
+# tokenizer = joblib.load("tokenizerLSTM.pkl")
+pickle_in = open("tokenizerLSTM.pkl","rb")
+classifier=pickle.load(pickle_in)
+
+
 
 
 
@@ -31,10 +35,11 @@ def sentiment_analysis(text: str):
     # else:
     #     sentiment = "neutral"
         
-    tokenized_text = tokenizer.texts_to_sequences([text])
-    max_sequence_length = 250
-    tokenized_text = pad_sequences(tokenized_text, maxlen=max_sequence_length, padding='post')
-    prediction = model.predict(tokenized_text)
+    # tokenized_text = tokenizer.texts_to_sequences([text])
+    # max_sequence_length = 250
+    # tokenized_text = pad_sequences(tokenized_text, maxlen=max_sequence_length, padding='post')
+    # prediction = model.predict(tokenized_text)
+    prediction = "Tokenizer Loaded"
 
 
 
