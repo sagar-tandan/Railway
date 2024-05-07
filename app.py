@@ -2,16 +2,18 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-import pickle
+import joblib
 import uvicorn
+import numpy as np
 
 app = FastAPI(title="Sentiment Analysis API")
-# model = load_model("LSTM78percentFinal.h5")
+
+
+model = load_model("LSTM78percentFinal.h5")
 
 # Load your tokenizer
-# tokenizer = joblib.load("tokenizerLSTM.pkl")
-pickle_in = open("tokenizerLSTM.pkl","rb")
-classifier=pickle.load(pickle_in)
+tokenizer = joblib.load("tokenizerLSTM.pkl")
+
 
 
 
@@ -20,6 +22,11 @@ classifier=pickle.load(pickle_in)
 @app.get("/", include_in_schema=False)
 def index():
     return RedirectResponse("/docs", status_code=308)
+
+def get_sentiment_label(class_index):
+    labels = ['Joy', 'Sadness','Inquiry', 'Neutral','Disappointment']
+    return labels[class_index]
+
 
 @app.get("/sentiment-analysis/{text}")
 def sentiment_analysis(text: str):
@@ -34,11 +41,17 @@ def sentiment_analysis(text: str):
     # else:
     #     sentiment = "neutral"
         
-    # tokenized_text = tokenizer.texts_to_sequences([text])
-    # max_sequence_length = 250
-    # tokenized_text = pad_sequences(tokenized_text, maxlen=max_sequence_length, padding='post')
-    # prediction = model.predict(tokenized_text)
-    prediction = "Tokenizer Loaded"
+    tokenized_text = tokenizer.texts_to_sequences([text])
+    max_sequence_length = 250
+
+    padded = pad_sequences(tokenized_text, maxlen=max_sequence_length)
+    pred = model.predict(padded)
+    prediction = pred.tolist()[0]
+    finalPrediction = prediction.index(max(prediction))
+    sentiment_label = get_sentiment_label(finalPrediction)
+
+
+    prediction = model.summary()
 
 
 
@@ -46,8 +59,7 @@ def sentiment_analysis(text: str):
 
     return {
         "text": text,
-        # "sentiment": sentiment,
-        # "polarity": polarity,
-        # "subjectivity": subjectivity,
-        "prediction" : prediction,
+        "prediction" : pred.tolist()[0],
+        "index" : finalPrediction,
+        "Emotion" : sentiment_label,
     }

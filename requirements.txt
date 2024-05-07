@@ -1,7 +1,5 @@
 fastapi
 uvicorn
-tensorflow
-
-numpy
-pandas
+tensorflow==2.13.0
 scikit-learn
+numpy
