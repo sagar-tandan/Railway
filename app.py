@@ -6,9 +6,11 @@ import joblib
 import uvicorn
 import numpy as np
 from pydantic import BaseModel
+from typing import List
+
 
 class TextData(BaseModel):
-    texts: list[str]
+    texts: List[str]
 
 app = FastAPI(title="Sentiment Analysis API")
 
