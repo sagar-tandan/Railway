@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
+from fastapi.middleware.cors import CORSMiddleware
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import joblib
@@ -33,7 +34,14 @@ def get_sentiment_label(class_index):
     labels = ['Joy', 'Sadness','Inquiry', 'Neutral','Disappointment']
     return labels[class_index]
 
-
+# Allow CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow requests from any origin
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["*"],
+)
 
 @app.post("/sentiment-analysis/")
 async def sentiment_analysis(data: TextData):
