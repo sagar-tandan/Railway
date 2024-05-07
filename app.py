@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from textblob import TextBlob
-simport uvicorn
+import uvicorn
 
 app =  FastAPI(title="Sentiment Analysis API")
 
