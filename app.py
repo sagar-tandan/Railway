@@ -22,10 +22,6 @@ model = load_model("LSTM78percentFinal.h5")
 tokenizer = joblib.load("tokenizerLSTM.pkl")
 
 
-
-
-
-
 @app.get("/", include_in_schema=False)
 def index():
     return RedirectResponse("/docs", status_code=308)
@@ -55,41 +51,10 @@ async def sentiment_analysis(data: TextData):
         final_prediction = prediction.index(max(prediction))
         sentiment_label = get_sentiment_label(final_prediction)
         results.append({"text": text,"predictions":prediction, "sentiment": sentiment_label})
+        # results = sorted(results, key=lambda x: max(x['predictions']), reverse=True)
+
     return results
 
 
-# @app.get("/sentiment-analysis/{text}")
-# def sentiment_analysis(text: str):
-#     # blob = TextBlob(text)
-#     # polarity = blob.sentiment.polarity
-#     # subjectivity = blob.sentiment.subjectivity
-
-#     # if polarity > 0:
-#     #     sentiment = "positive"
-#     # elif polarity < 0:
-#     #     sentiment = "negative"
-#     # else:
-#     #     sentiment = "neutral"
-        
-#     tokenized_text = tokenizer.texts_to_sequences([text])
-#     max_sequence_length = 250
-
-#     padded = pad_sequences(tokenized_text, maxlen=max_sequence_length)
-#     pred = model.predict(padded)
-#     prediction = pred.tolist()[0]
-#     finalPrediction = prediction.index(max(prediction))
-#     sentiment_label = get_sentiment_label(finalPrediction)
 
 
-#     prediction = model.summary()
-
-
-
-
-
-#     return {
-#         "text": text,
-#         "prediction" : pred.tolist()[0],
-#         "index" : finalPrediction,
-#         "Emotion" : sentiment_label,
-#     }
